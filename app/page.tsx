@@ -1,103 +1,57 @@
-'use client';
+import Image from 'next/image';
+import { NowPlayingMovieResponse } from './utils/types';
+import MovieDetails from './components/movieDetails';
 
-import { toggleClass, getCurrentColorScheme } from './utils/theme';
-import { useState } from 'react';
-
-export default function Home() {
-  const currentColorScheme = getCurrentColorScheme();
-
-  const [theme, setTheme] = useState(currentColorScheme);
-
-  function handleToggle() {
-    if (theme == 'light') {
-      toggleClass();
-      setTheme('dark');
-    } else {
-      toggleClass();
-      setTheme('light');
-    }
-  }
+export default async function Home() {
+  const url =
+    'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1';
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${process.env.API_KEY}`,
+    },
+  };
+  const response = await fetch(url, options);
+  const result = await response.json();
 
   return (
-    <main className='flex min-h-screen items-center flex-col justify-center dark:bg-black'>
-      <h1 className='text-2xl font-bold dark:text-white mb-12'>
-        Theme switcher
-      </h1>
-
-      <div className='flex items-center justify-center space-x-4'>
-        <button
-          onClick={handleToggle}
-          className='bg-black capitalize px-2 py-1 rounded-sm text-white font-medium hover:bg-gray-900 dark:bg-white dark:text-black dark:hover:bg-gray-100'
-        >
-          {theme}
-        </button>
-
-        <Dropdown />
-      </div>
+    <main className='flex flex-col'>
+      <section>
+        <h2 className='border w-fit py-0.5 px-1 uppercase text-xs border-black font-semibold mb-6'>
+          Movie List / Now Streaming
+        </h2>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+          {result.results.map((movie: NowPlayingMovieResponse) => (
+            <div
+              key={movie.id}
+              className='w-full flex items-start justify-center mb-4 gap-x-2'
+            >
+              <div className='w-1/2'>
+                <h2 className='font-semibold text-xl'>{movie.title}</h2>
+                <div className='w-full flex justify-end my-4'>
+                  <MovieDetails movieId={movie.id} />
+                </div>
+                <div className='w-full flex justify-end my-4'>
+                  <p className='text-sm max-w-[30ch] text-balance font-sans leading-normal'>
+                    {movie.overview}
+                  </p>
+                </div>
+              </div>
+              <div className='w-1/2'>
+                <Image
+                  alt='Movie poster'
+                  width={650}
+                  height={1050}
+                  src={`https://image.tmdb.org/t/p/w500${
+                    movie.poster_path ?? movie.backdrop_path
+                  }`}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
-  );
-}
-
-function Dropdown() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className='relative inline-block text-left'>
-      <button
-        onClick={() => setOpen(!open)}
-        type='button'
-        className='bg-black capitalize px-2 py-1 rounded-sm text-white font-medium hover:bg-gray-900 dark:bg-white dark:text-black dark:hover:bg-gray-100'
-        id='menu-button'
-        aria-expanded='true'
-        aria-haspopup='true'
-      >
-        Options
-      </button>
-
-      <div
-        className={`${
-          open
-            ? 'absolute right-0 w-56 mt-2 origin-top-right bg-white border-2 border-gray-200 rounded-sm'
-            : 'hidden'
-        }`}
-        role='menu'
-        aria-orientation='vertical'
-        aria-labelledby='menu-button'
-      >
-        <button
-          type='button'
-          className='text-white font-medium hover:bg-gray-900 dark:bg-white bg-black dark:text-black group dark:hover:bg-gray-100 flex items-center w-full px-2 py-2 text-sm'
-          role='menuitem'
-          onClick={() => {
-            toggleClass('system');
-            setOpen(false);
-          }}
-        >
-          System
-        </button>
-        <button
-          type='button'
-          className='text-white font-medium hover:bg-gray-900 dark:bg-white bg-black dark:text-black group dark:hover:bg-gray-100 flex items-center w-full px-2 py-2 text-sm'
-          role='menuitem'
-          onClick={() => {
-            toggleClass('light');
-            setOpen(false);
-          }}
-        >
-          Light
-        </button>
-        <button
-          type='button'
-          className='text-white font-medium hover:bg-gray-900 dark:bg-white bg-black dark:text-black group dark:hover:bg-gray-100 flex items-center w-full px-2 py-2 text-sm'
-          role='menuitem'
-          onClick={() => {
-            toggleClass('dark');
-            setOpen(false);
-          }}
-        >
-          Dark
-        </button>
-      </div>
-    </div>
   );
 }
