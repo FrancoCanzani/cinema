@@ -25,15 +25,15 @@ export default async function Home() {
           {result.results.map((movie: NowPlayingMovieResponse) => (
             <div
               key={movie.id}
-              className='w-full flex items-start justify-center mb-4 gap-x-2'
+              className='w-full flex items-start justify-center mb-4 gap-x-4'
             >
               <div className='w-1/2'>
                 <h2 className='font-semibold text-xl'>{movie.title}</h2>
-                <div className='w-full flex justify-end my-4'>
+                <div className='w-full flex justify-start mt-2 mb-6'>
                   <MovieDetails movieId={movie.id} />
                 </div>
                 <div className='w-full flex justify-end my-4'>
-                  <p className='text-sm max-w-[30ch] text-balance font-sans leading-normal'>
+                  <p className='text-base max-w-[20ch] leading-normal'>
                     {movie.overview}
                   </p>
                 </div>
@@ -43,6 +43,7 @@ export default async function Home() {
                   alt='Movie poster'
                   width={650}
                   height={1050}
+                  className='rounded-sm'
                   src={`https://image.tmdb.org/t/p/w500${
                     movie.poster_path ?? movie.backdrop_path
                   }`}
