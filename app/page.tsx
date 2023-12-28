@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { NowPlayingMovieResponse } from './utils/types';
 import MovieDetails from './components/movieDetails';
+import Link from 'next/link';
 
 export default async function Home() {
   const url =
@@ -25,20 +26,26 @@ export default async function Home() {
           {result.results.map((movie: NowPlayingMovieResponse) => (
             <div
               key={movie.id}
-              className='w-full flex items-start justify-center mb-4 gap-x-4'
+              className='w-full flex flex-col items-start justify-center mb-4 gap-x-4 md:flex-row'
             >
-              <div className='w-1/2'>
-                <h2 className='font-semibold text-xl'>{movie.title}</h2>
+              <div className='w-full md:w-1/2'>
+                <Link
+                  href={`/movies/${movie.id}`}
+                  className='font-semibold group text-xl hover:underline'
+                >
+                  {movie.title}{' '}
+                  <span className='group-hover:visible invisible'>↗</span>
+                </Link>
                 <div className='w-full flex justify-start mt-2 mb-6'>
                   <MovieDetails movieId={movie.id} />
                 </div>
                 <div className='w-full flex justify-end my-4'>
-                  <p className='text-base max-w-[20ch] leading-normal'>
+                  <p className='text-sm md:max-w-[30ch] w-full leading-normal text-ellipsis overflow-hidden'>
                     {movie.overview}
                   </p>
                 </div>
               </div>
-              <div className='w-1/2'>
+              <div className='w-full md:w-1/2'>
                 <Image
                   alt='Movie poster'
                   width={650}
