@@ -16,9 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className={`${inter.className} py-12 p-4 bg-[#fcfcfc]`}>
-        {children}
-      </body>
+      <body className={`${inter.className} bg-[#fcfcfc]`}>{children}</body>
     </html>
   );
 }

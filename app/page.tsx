@@ -18,7 +18,13 @@ export default async function Home() {
 
   return (
     <main className='flex flex-col'>
-      <section>
+      <header className='w-full flex items-center justify-between p-4 bg-white shadow-sm'>
+        <Link href={'/'} className='uppercase border-2 border-black px-2 py-1 flex flex-col justify-center font-bold font-serif text-sm'>
+          Lumière
+        </Link>
+        <h2>Vergelson</h2>
+      </header>
+      <section className='py-12 p-4'>
         <h2 className='border w-fit py-0.5 px-1 uppercase text-xs border-black font-semibold mb-6'>
           Movie List / Now Streaming
         </h2>
