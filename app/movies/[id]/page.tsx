@@ -1,5 +1,7 @@
-import { NowPlayingMovieResponse, ActorInfo } from '@/app/utils/types';
+import { NowPlayingMovieResponse, MovieProps } from '@/app/utils/types';
 import Image from 'next/image';
+import Cast from '@/app/components/cast';
+import Link from 'next/link';
 
 export async function generateStaticParams() {
   const url =
@@ -19,7 +21,7 @@ export async function generateStaticParams() {
 }
 
 export default async function Movie({ params }: { params: { id: string } }) {
-  const url = `https://api.themoviedb.org/3/movie/${params.id}/credits`;
+  const url = `https://api.themoviedb.org/3/movie/${params.id}?language=en-US`;
   const options = {
     method: 'GET',
     headers: {
@@ -28,45 +30,40 @@ export default async function Movie({ params }: { params: { id: string } }) {
     },
   };
   const response = await fetch(url, options);
-  const credits = await response.json();
-  const cast: ActorInfo[] = credits.cast;
-  const sortedCast = cast
-    .slice(0, 10)
-    .sort((a: ActorInfo, b: ActorInfo) => b.popularity - a.popularity);
+  const movie: MovieProps = await response.json();
 
   return (
-    <main>
-      <section className='flex w-full flex-col items-start justify-center'>
-        <h2 className='border w-fit py-0.5 px-1 uppercase text-xs border-black font-semibold mb-6'>
-          Cast
-        </h2>
-        <div className='container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
-          {sortedCast.map((actor: ActorInfo) => (
-            <div
-              key={actor.id}
-              className='flex items-center justify-start gap-x-2'
-            >
-              <div>
-                <Image
-                  width={40}
-                  height={40}
-                  className='rounded-sm'
-                  src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
-                  alt={actor.name}
-                />
-              </div>
-              <div>
-                <p>
-                  {actor.name} / {actor.known_for_department}
-                </p>
-                <p className='text-orange-600 font-semibold'>
-                  {actor.character}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+    <main className='px-3 py-6'>
+      <div className='flex items-center justify-between'>
+        <h1 className='font-semibold group text-xl underline'>{movie.title}</h1>
+        <Link
+          href={'#'}
+          className='bg-orange-500 px-2 py-1 border-2 shadow border-black font-semibold hover:bg-orange-400 text-sm'
+        >
+          Buy Ticket
+        </Link>
+      </div>
+      <h3 className='italic text-sm'>{movie.tagline}</h3>
+      <div className='flex justify-start items-start gap-x-4 mt-8'>
+        <section className='w-full xl:w-2/5'>
+          <p className='text-sm w-full mb-3 max-w-prose leading-normal text-ellipsis overflow-hidden'>
+            {movie.overview}
+          </p>
+          <Image
+            alt='Movie poster'
+            width={545}
+            height={900}
+            priority
+            className='rounded-sm'
+            src={`https://image.tmdb.org/t/p/w500${
+              movie.poster_path ?? movie.backdrop_path
+            }`}
+          />
+        </section>
+        <section className='w-full h-full flex items-start justify-start xl:w-3/5'>
+          <Cast movieId={params.id} />
+        </section>
+      </div>
     </main>
   );
 }

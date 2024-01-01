@@ -10,29 +10,31 @@ export default function MovieCarousel({
   movies: NowPlayingMovieResponse[];
 }) {
   return (
-    <div className='bg-gray-100 p-3 gap-y-4 flex flex-col'>
+    <div className='bg-gray-100 px-3 py-6 gap-y-4 flex flex-col'>
       <nav className='flex items-center justify-between'>
-        <h2 className='font-semibold border-b-2 border-black w-fit'>
+        <h2 className='font-semibold uppercase border-b-2 border-black w-fit'>
           Current movies
         </h2>
-        <Link href={'#'} className='italic hover:underline text-sm'>
+        <Link href={'movies/all'} className='italic hover:underline text-sm'>
           See all
         </Link>
       </nav>
-      <div className='flex w-full carousel space-x-3'>
+      <div className='flex carousel space-x-3'>
         {movies.map((movie: NowPlayingMovieResponse) => (
           <div key={movie.id} className='carousel-item flex flex-col'>
             <Image
               alt='Movie poster'
               width={325}
               height={400}
-              className='rounded-sm'
+              className='rounded-sm hover:scale-105 z-10 transition-all duration-200'
               priority
               src={`https://image.tmdb.org/t/p/w500${
                 movie.poster_path ?? movie.backdrop_path
               }`}
             />
-            <p className='py-2 h-10 text-xs'>{movie.title}</p>
+            <p className='py-2 h-12 text-sm font-semibold max-w-[90%]'>
+              {movie.title}
+            </p>
             <Link
               href={'#'}
               className='text-orange-500 hover:underline font-semibold text-sm'
