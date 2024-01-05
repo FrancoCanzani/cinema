@@ -1,5 +1,4 @@
-import Slider from './components/slider';
-import MovieDetails from './components/movieDetails';
+import MoviePicker from './components/MoviePicker';
 
 export default async function Home() {
   const url =
@@ -16,7 +15,7 @@ export default async function Home() {
 
   return (
     <main className='flex flex-col'>
-      <Slider movies={result.results} />
+      <MoviePicker movies={result.results} />
     </main>
   );
 }

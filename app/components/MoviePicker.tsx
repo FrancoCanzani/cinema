@@ -7,8 +7,9 @@ import Image from 'next/image';
 import MovieDetails from './movieDetails';
 import getDayAndDate from '../utils/getDayAndDate';
 import TimeButton from './buttons/timeButton';
+import SelectedMovie from './selectedMovie';
 
-export default function MovieCarousel({
+export default function MoviePicker({
   movies,
 }: {
   movies: NowPlayingMovieResponse[];
@@ -17,6 +18,11 @@ export default function MovieCarousel({
   const today = days[0];
 
   const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedMovie, setSelectedMovie] = useState<{
+    movie: NowPlayingMovieResponse;
+    day: string;
+    time: string;
+  } | null>(null);
 
   return (
     <div className='flex items-center justify-center flex-col'>
@@ -33,7 +39,7 @@ export default function MovieCarousel({
           </button>
         ))}
       </div>
-
+      <SelectedMovie selectedMovie={selectedMovie} />
       <ul className='w-full'>
         {movies.map((movie: NowPlayingMovieResponse) => (
           <li
@@ -62,17 +68,26 @@ export default function MovieCarousel({
                   time='17:15'
                   selectedDate={selectedDate}
                   today={today}
+                  movie={movie}
+                  selectedMovie={selectedMovie}
+                  setSelectedMovie={setSelectedMovie}
                 />
                 <TimeButton
                   time='20:30'
                   selectedDate={selectedDate}
                   today={today}
+                  movie={movie}
+                  selectedMovie={selectedMovie}
+                  setSelectedMovie={setSelectedMovie}
                 />
                 {movie.popularity > 400 && (
                   <TimeButton
                     time='22:00'
                     selectedDate={selectedDate}
                     today={today}
+                    movie={movie}
+                    selectedMovie={selectedMovie}
+                    setSelectedMovie={setSelectedMovie}
                   />
                 )}
                 {movie.popularity > 600 && (
@@ -80,6 +95,9 @@ export default function MovieCarousel({
                     time='23:30'
                     selectedDate={selectedDate}
                     today={today}
+                    movie={movie}
+                    selectedMovie={selectedMovie}
+                    setSelectedMovie={setSelectedMovie}
                   />
                 )}
               </div>
