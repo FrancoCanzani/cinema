@@ -1,21 +1,45 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import convertRuntime from '../utils/convertRuntime';
 import formatCurrency from '../utils/formatCurrency';
+import { MovieProps } from '../utils/types';
 
-export default async function MovieDetails({ movieId }: { movieId: number }) {
-  const url = `https://api.themoviedb.org/3/movie/${movieId}`;
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${process.env.API_KEY}`,
-    },
-  };
-  const response = await fetch(url, options);
-  const movie = await response.json();
+export default function MovieDetails({ movieId }: { movieId: number }) {
+  const [movie, setMovie] = useState<MovieProps | null>(null);
+
+  useEffect(() => {
+    async function fetchMovie() {
+      const url = `https://api.themoviedb.org/3/movie/${movieId}`;
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_KEY}`,
+        },
+      };
+
+      try {
+        const response = await fetch(url, options);
+        if (response.ok) {
+          const data = await response.json();
+          setMovie(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchMovie();
+  }, [movieId]);
 
   interface GenreProps {
-    id: string;
+    id: number;
     name: string;
+  }
+
+  if (!movie) {
+    return;
   }
 
   return (

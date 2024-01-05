@@ -1,4 +1,5 @@
 import Slider from './components/slider';
+import MovieDetails from './components/movieDetails';
 
 export default async function Home() {
   const url =

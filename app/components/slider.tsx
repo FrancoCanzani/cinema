@@ -1,96 +1,92 @@
-import React from 'react';
+'use client';
+
+import { useState } from 'react';
 import { NowPlayingMovieResponse } from '../utils/types';
 import Link from 'next/link';
+import Image from 'next/image';
+import MovieDetails from './movieDetails';
+import getDayAndDate from '../utils/getDayAndDate';
+import TimeButton from './buttons/timeButton';
 
 export default function MovieCarousel({
   movies,
 }: {
   movies: NowPlayingMovieResponse[];
 }) {
-  const daysOfWeek = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
-  const today = new Date();
-  const currentDayIndex = today.getDay();
-  const nextDays = Array.from(
-    { length: 3 },
-    (_, i) => (currentDayIndex + i) % 7
-  );
+  const days: string[] = Array.from({ length: 7 }, (_, i) => getDayAndDate(i));
+  const today = days[0];
+
+  const [selectedDate, setSelectedDate] = useState(today);
 
   return (
-    <div className='relative'>
-      <div className='overflow-x-auto'>
-        <table className='w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 min-w-max'>
-          <thead className='text-xs border-b text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
-            <tr>
-              <th
-                scope='col'
-                className='p-4 border-r-2 md:sticky md:left-0 bg-white'
-              >
-                Movie
-              </th>
-              {nextDays.map((dayIndex, index) => (
-                <th
-                  key={index}
-                  className={`${
-                    index === 0 && 'bg-gray-200 rounded-sm'
-                  } px-4 border py-2`}
-                >
-                  {daysOfWeek[currentDayIndex + index]}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {movies.map((movie: NowPlayingMovieResponse) => (
-              <tr
-                key={movie.id}
-                className='even:bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700'
-              >
-                <th
-                  scope='row'
-                  className='px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white md:sticky md:left-0 bg-white'
-                >
-                  <Link
-                    href={`/movies/${movie.id}`}
-                    className='text-sm font-semibold hover:underline'
-                  >
-                    {movie.title}
-                  </Link>
-                </th>
-                {nextDays.map((dayIndex, index) => (
-                  <td key={index} className='px-4 py-2 border'>
-                    <div className='space-x-2'>
-                      <button className='bg-black rounded-sm px-2 py-1 text-white hover:text-gray-200'>
-                        17:15
-                      </button>
-                      <button className='bg-black rounded-sm px-2 py-1 text-white hover:text-gray-200'>
-                        20:00
-                      </button>
-                      {movie.popularity > 400 && (
-                        <button className='bg-black rounded-sm px-2 py-1 text-white hover:text-gray-200'>
-                          22:30
-                        </button>
-                      )}
-                      {movie.popularity > 700 && (
-                        <button className='bg-black rounded-sm px-2 py-1 text-white hover:text-gray-200'>
-                          00:15
-                        </button>
-                      )}{' '}
-                    </div>
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className='flex items-center justify-center flex-col'>
+      <div className='flex items-center overflow-x-auto justify-start border-b w-full'>
+        {days.map((day, index) => (
+          <button
+            onClick={() => setSelectedDate(day)}
+            key={index}
+            className={`${
+              day === selectedDate && 'bg-[#232323] text-white border-[#232323]'
+            } px-4 font-semibold border py-2`}
+          >
+            {day}
+          </button>
+        ))}
       </div>
+
+      <ul className='w-full'>
+        {movies.map((movie: NowPlayingMovieResponse) => (
+          <li
+            key={movie.id}
+            className='even:bg-gray-100 grid auto-cols-min auto-rows-min grid-cols-[80px,1fr] gap-4 sm:grid-cols-[112px,1fr] last:border-b-0 border-b px-5 sm:px-8 py-10'
+          >
+            <Image
+              alt={`${movie.title}`}
+              width={150}
+              height={350}
+              className='rounded-sm'
+              src={`https://image.tmdb.org/t/p/w500${
+                movie.poster_path ?? movie.backdrop_path
+              }`}
+            />
+            <div className='text-gray-900'>
+              <Link
+                href={`/movies/${movie.id}`}
+                className='text-sm font-semibold hover:underline'
+              >
+                {movie.title}
+              </Link>
+              <MovieDetails movieId={movie.id} />
+              <div className='flex items-center space-x-3 mt-6'>
+                <TimeButton
+                  time='17:15'
+                  selectedDate={selectedDate}
+                  today={today}
+                />
+                <TimeButton
+                  time='20:30'
+                  selectedDate={selectedDate}
+                  today={today}
+                />
+                {movie.popularity > 400 && (
+                  <TimeButton
+                    time='22:00'
+                    selectedDate={selectedDate}
+                    today={today}
+                  />
+                )}
+                {movie.popularity > 600 && (
+                  <TimeButton
+                    time='23:30'
+                    selectedDate={selectedDate}
+                    today={today}
+                  />
+                )}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
