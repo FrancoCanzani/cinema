@@ -1,6 +1,7 @@
 import { ButtonHTMLAttributes, Dispatch, SetStateAction } from 'react';
 import cn from '@/app/utils/cn';
 import { NowPlayingMovieResponse } from '@/app/utils/types';
+import { useEffect } from 'react';
 
 interface TimeButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   time: string;
@@ -38,6 +39,13 @@ export default function TimeButton({
   const handleClick = () => {
     setSelectedMovie({ movie: movie, day: selectedDate, time: time });
   };
+
+  useEffect(() => {
+    if (selectedMovie) {
+      sessionStorage.setItem('selectedMovie', JSON.stringify(selectedMovie));
+      console.log(sessionStorage.getItem('selectedMovie'));
+    }
+  }, [selectedMovie]);
 
   return (
     <button
