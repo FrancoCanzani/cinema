@@ -16,7 +16,7 @@ export default function SeatPicker() {
   const selectedMovie: NowPlayingMovieResponse | null = storedObj?.movie;
 
   return (
-    <div className='flex items-center justify-center flex-col w-full md:w-fit gap-y-4'>
+    <div className='flex mb-8 md:mb-0 items-center justify-center flex-col w-full md:w-fit gap-y-4'>
       <ShowCase />
       <Cinema
         movie={selectedMovie}
@@ -31,59 +31,60 @@ export default function SeatPicker() {
 
 function ShowCase() {
   return (
-    <ul className='w-full bg-[#232323] rounded-sm text-white mb-4 flex items-center justify-center space-x-5'>
-      <li>
-        <span className='' /> <small>N/A</small>
-      </li>
-      <li>
-        <span className='' /> <small>Selected</small>
-      </li>
-      <li>
-        <span className='' /> <small>Occupied</small>
+    <ul className='w-full bg-[#232323] py-1 px-3 rounded-sm text-white mb-4 flex items-center justify-center space-x-5'>
+      <li className='flex items-center justify-center space-x-1'>
+        <span className='w-3 h-3 flex rounded-full bg-gray-600' />{' '}
+        <span>N/A</span>
+      </li>{' '}
+      <li className='flex items-center justify-center space-x-1'>
+        <span className='w-3 h-3 flex rounded-full bg-green-500' />{' '}
+        <span>Selected</span>
+      </li>{' '}
+      <li className='flex items-center justify-center space-x-1'>
+        <span className='w-3 h-3 flex rounded-full bg-red-600' />{' '}
+        <span>Occupied</span>
       </li>
     </ul>
   );
 }
 
 function Cinema({ selectedSeats, onSelectedSeatsChange }: CinemaProps) {
-  const rows = 8;
-  const columns = 8;
-
-  const seats = Array.from({ length: rows * columns }, (_, i) => i + 1);
+  const seats = Array.from({ length: 80 }, (_, i) => ({
+    seat: i + 1,
+    isSelected: selectedSeats.includes(i + 1),
+  }));
 
   function handleSelectedState(seat: number) {
-    const isSelected = selectedSeats.includes(seat);
-    if (isSelected) {
-      onSelectedSeatsChange(
-        selectedSeats.filter((selectedSeat) => selectedSeat !== seat)
-      );
-    } else {
-      onSelectedSeatsChange([...selectedSeats, seat]);
-    }
+    const updatedSeats = seats.map((s) =>
+      s.seat === seat ? { ...s, isSelected: !s.isSelected } : s
+    );
+
+    const newSelectedSeats = updatedSeats
+      .filter((s) => s.isSelected)
+      .map((s) => s.seat);
+
+    onSelectedSeatsChange(newSelectedSeats);
   }
 
   return (
     <div className=''>
-      <div className='h-12 w-4/5 mx-auto bg-white mb-6 p-3 text-center text-xs font-semibold rounded-sm transform -rotate-x-30 scale-110 shadow-lg'>
+      <div className='h-16 w-5/6 mx-auto bg-white mb-6 p-3 text-center text-xs font-semibold rounded-sm transform -rotate-x-30 scale-110 shadow-2xl'>
         Screen
       </div>
       <div className='grid grid-cols-8 gap-2'>
-        {seats.map((seat) => {
-          const isSelected = selectedSeats.includes(seat);
-          return (
-            <span
-              tabIndex={0}
-              key={seat}
-              className={cn(
-                'flex items-center cursor-pointer justify-center bg-gray-600 hover:bg-gray-400 w-8 text-xs text-white h-6 rounded-tl-2xl rounded-tr-2xl transition-transform ease-in-out',
-                isSelected && 'bg-green-500 hover:bg-green-300'
-              )}
-              onClick={() => handleSelectedState(seat)}
-            >
-              {seat}
-            </span>
-          );
-        })}
+        {seats.map((seat, index) => (
+          <div
+            tabIndex={0}
+            key={seat.seat}
+            className={cn(
+              'flex items-center mr-1 cursor-pointer justify-center w-8 h-6 rounded-t-xl bg-black text-xs text-white',
+              seat.isSelected && 'bg-green-500 hover:bg-green-300'
+            )}
+            onClick={() => handleSelectedState(seat.seat)}
+          >
+            {seat.seat}
+          </div>
+        ))}
       </div>
     </div>
   );

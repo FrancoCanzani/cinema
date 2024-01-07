@@ -13,9 +13,5 @@ export default async function Home() {
   const response = await fetch(url, options);
   const result = await response.json();
 
-  return (
-    <main className='flex flex-col'>
-      <MoviePicker movies={result.results} />
-    </main>
-  );
+  return <MoviePicker movies={result.results} />;
 }

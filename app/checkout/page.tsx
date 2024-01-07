@@ -1,7 +1,7 @@
 'use client';
 
 import { NowPlayingMovieResponse } from '../utils/types';
-import SeatPicker from '../components/seatPicker';
+import Invoice from '../components/invoice';
 
 export default function Checkout() {
   if (typeof window == undefined) {
@@ -13,10 +13,12 @@ export default function Checkout() {
   const movie: NowPlayingMovieResponse = storedObj?.movie;
 
   return (
-    <main className='px-3 py-6'>
-      <h1 className='font-semibold group text-xl underline mb-6'>Checkout</h1>
-      <div className='w-full flex items-center justify-start flex-col mb-6'>
-        <h2 className='text-start w-full'>
+    <main className='px-3 py-6 flex items-center justify-start flex-col'>
+      <h1 className='font-semibold text-xl text-left w-full underline mb-6'>
+        Checkout
+      </h1>
+      <div className='flex w-full items-center justify-start flex-col mb-6'>
+        <h2 className='w-full'>
           Movie: <strong>{movie.title}</strong>
         </h2>
         <div className='flex w-full items-center justify-start space-x-3'>
@@ -50,7 +52,7 @@ export default function Checkout() {
           </span>
         </div>
       </div>
-      <SeatPicker />
+      <Invoice />
     </main>
   );
 }

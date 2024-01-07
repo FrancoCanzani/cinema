@@ -43,7 +43,6 @@ export default function TimeButton({
   useEffect(() => {
     if (selectedMovie) {
       sessionStorage.setItem('selectedMovie', JSON.stringify(selectedMovie));
-      console.log(sessionStorage.getItem('selectedMovie'));
     }
   }, [selectedMovie]);
 
