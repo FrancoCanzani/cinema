@@ -16,6 +16,7 @@ export default function MoviePicker({
 }) {
   const days: string[] = Array.from({ length: 7 }, (_, i) => getDayAndDate(i));
   const today = days[0];
+  console.log(movies);
 
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedMovie, setSelectedMovie] = useState<{
@@ -51,7 +52,7 @@ export default function MoviePicker({
               width={150}
               height={350}
               className='rounded-sm'
-              src={`https://image.tmdb.org/t/p/w500${
+              src={`https://image.tmdb.org/t/p/w780${
                 movie.poster_path ?? movie.backdrop_path
               }`}
             />

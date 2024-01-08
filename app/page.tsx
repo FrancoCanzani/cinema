@@ -1,17 +1,21 @@
-import MoviePicker from './components/MoviePicker';
+import { LampEffect } from './components/lampEffect';
+import Movies from './components/movies';
 
-export default async function Home() {
-  const url =
-    'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1';
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${process.env.API_KEY}`,
-    },
-  };
-  const response = await fetch(url, options);
-  const result = await response.json();
-
-  return <MoviePicker movies={result.results} />;
+export default function App() {
+  return (
+    <main>
+      <LampEffect />
+      <section className='px-3 py-6 mt-6 flex flex-col w-full'>
+        <h2 className='font-semibold text-xl pl-1 md:pl-12 underline text-left'>
+          Top Movies
+        </h2>
+        <h3 className='pl-1 text-sm mt-1 md:pl-12 text-left'>
+          The top films from our cinemas, find tickets near you.
+        </h3>
+        <div className='flex items-start justify-start w-full'>
+          <Movies />
+        </div>
+      </section>
+    </main>
+  );
 }

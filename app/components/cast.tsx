@@ -18,7 +18,7 @@ export default async function Cast({ movieId }: { movieId: string }) {
     .sort((a: ActorInfo, b: ActorInfo) => b.popularity - a.popularity);
 
   return (
-    <section className='flex w-full flex-col items-start justify-center'>
+    <section className='flex w-full mt-6 md:mt-0 flex-col items-start justify-center'>
       <h2 className='border w-fit py-0.5 px-1 uppercase text-xs border-black font-semibold mb-6'>
         Cast
       </h2>
@@ -39,7 +39,7 @@ function CastMember({ actor }: { actor: ActorInfo }) {
           width={40}
           height={40}
           className='rounded-sm'
-          src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
+          src={`https://image.tmdb.org/t/p/w342${actor.profile_path}`}
           alt={actor.name}
         />
       </div>
