@@ -35,13 +35,23 @@ function CastMember({ actor }: { actor: ActorInfo }) {
   return (
     <div className='flex items-center justify-start gap-x-2'>
       <div>
-        <Image
-          width={40}
-          height={40}
-          className='rounded-sm'
-          src={`https://image.tmdb.org/t/p/w342${actor.profile_path}`}
-          alt={actor.name}
-        />
+        {actor.profile_path ? (
+          <Image
+            width={40}
+            height={40}
+            className='rounded-sm'
+            src={`https://image.tmdb.org/t/p/w342${actor.profile_path}`}
+            alt={actor.name}
+          />
+        ) : (
+          <Image
+            src='/cast_placeholder.jpg'
+            alt={actor.name}
+            className='rounded-sm'
+            width={40}
+            height={80}
+          />
+        )}
       </div>
       <div>
         <p>

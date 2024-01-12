@@ -16,7 +16,6 @@ export default function MoviePicker({
 }) {
   const days: string[] = Array.from({ length: 7 }, (_, i) => getDayAndDate(i));
   const today = days[0];
-  console.log(movies);
 
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedMovie, setSelectedMovie] = useState<{

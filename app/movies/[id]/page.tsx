@@ -31,7 +31,6 @@ export default async function Movie({ params }: { params: { id: string } }) {
   };
   const response = await fetch(url, options);
   const movie: MovieProps = await response.json();
-  console.log(movie);
 
   return (
     <main className='px-3 py-6'>
@@ -66,7 +65,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
             height={900}
             priority
             className='rounded-sm'
-            src={`https://image.tmdb.org/t/p/original${
+            src={`https://image.tmdb.org/t/p/w780${
               movie.poster_path ?? movie.backdrop_path
             }`}
           />

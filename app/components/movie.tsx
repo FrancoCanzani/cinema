@@ -18,14 +18,14 @@ export default function Movie({ movie }: { movie: NowPlayingMovieResponse }) {
           movie.poster_path ?? movie.backdrop_path
         }`}
         style={{
-          aspectRatio: '200/200',
+          aspectRatio: '200/250',
           objectFit: 'cover',
         }}
         width='400'
       />
       <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-4'>
         <h2 className='text-xl font-bold text-white'>{movie.title}</h2>
-        <p className='text-sm text-gray-200'>{movie.overview}</p>
+        <p className='text-sm text-gray-200 line-clamp-3'>{movie.overview}</p>
       </div>
     </Link>
   );
